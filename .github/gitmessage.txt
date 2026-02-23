@@ -1,0 +1,7 @@
+# type: 簡潔な要約 (英語／日本語)
+# 例: feat: Add authentication / 認証追加
+#
+# body: 詳細説明 (必要なら)
+# body: Describe what was changed and why
+#
+# --- 以下コメント ---
