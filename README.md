@@ -9,7 +9,7 @@ Japanese version: [README_ja.md](README_ja.md)
 - PHP 8.4
 - Laravel 12
 - MySQL 8.4
-- Nginx
+- Apache
 - Docker / Docker Compose
 
 ## Project Structure
@@ -17,8 +17,8 @@ Japanese version: [README_ja.md](README_ja.md)
 ```
 .
 ├── .docker/                    # Docker configuration files
-│   ├── nginx/                  # Nginx config
-│   │   └── default.conf        # HTTP config
+│   ├── apache/                 # Apache config
+│   │   └── 000-default.conf    # HTTP config
 │   └── php/                    # PHP config
 │       ├── Dockerfile          # PHP container build definition
 │       ├── docker-entrypoint.sh # Container init script
@@ -30,9 +30,9 @@ Japanese version: [README_ja.md](README_ja.md)
 ```
 
 - `.docker/`: Docker container build configurations organized by service.
-    - `nginx/`: Nginx configuration used as the web server (HTTP only).
-    - `php/`: PHP-FPM container build definition and settings.
-- `docker-compose.yml`: For local environment. Contains three services: `nginx`, `php` (PHP-FPM), and `db` (MySQL).
+  - `apache/`: Apache configuration used as the web server (HTTP only).
+  - `php/`: Apache + PHP container build definition and settings.
+- `docker-compose.yml`: For local environment. Contains two services: `web` (Apache + PHP) and `db` (MySQL).
 - Laravel project files are placed directly at the project root.
 
 ## Local Environment Setup
@@ -54,20 +54,20 @@ docker compose up -d
 #### 2. Install dependencies
 
 ```bash
-docker compose exec php composer install -o
+docker compose exec web composer install -o
 ```
 
 #### 3. Create environment configuration file
 
 ```bash
-docker compose exec php cp .env.example .env
-docker compose exec php php artisan key:generate
+docker compose exec web cp .env.example .env
+docker compose exec web php artisan key:generate
 ```
 
 #### 4. Run database migrations
 
 ```bash
-docker compose exec php php artisan migrate
+docker compose exec web php artisan migrate
 ```
 
 ### Access
@@ -103,17 +103,17 @@ All `php artisan` and `npm` commands must be run inside the container.
 ### Backend tests
 
 ```bash
-docker compose exec php php artisan test
+docker compose exec web php artisan test
 ```
 
 ### Frontend build (if needed)
 
 ```bash
-docker compose exec php npm run build
+docker compose exec web npm run build
 ```
 
 ### Frontend tests (if needed)
 
 ```bash
-docker compose exec php npm run test
+docker compose exec web npm run test
 ```

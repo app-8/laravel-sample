@@ -9,7 +9,7 @@ English version: [README.md](README.md)
 - PHP 8.4
 - Laravel 12
 - MySQL 8.4
-- Nginx
+- Apache
 - Docker / Docker Compose
 
 ## プロジェクト構成
@@ -17,8 +17,8 @@ English version: [README.md](README.md)
 ```
 .
 ├── .docker/                    # Docker関連の設定ファイル
-│   ├── nginx/                  # Nginx設定
-│   │   └── default.conf        # HTTP設定
+│   ├── apache/                 # Apache設定
+│   │   └── 000-default.conf    # HTTP設定
 │   └── php/                    # PHP設定
 │       ├── Dockerfile          # PHPコンテナのビルド定義
 │       ├── docker-entrypoint.sh # コンテナ起動時の初期化スクリプト
@@ -30,9 +30,9 @@ English version: [README.md](README.md)
 ```
 
 - `.docker/`: Docker コンテナのビルド設定をサービス別に管理します。
-    - `nginx/`: Web サーバーとして Nginx を使用しており、HTTP 設定ファイルがあります。
-    - `php/`: PHP-FPM コンテナのビルド定義・設定。
-- `docker-compose.yml`: ローカル環境用。サービスは `nginx`、`php`（PHP-FPM）、`db`（MySQL）があります。
+  - `apache/`: Web サーバーとして Apache を使用しており、HTTP 設定ファイルがあります。
+  - `php/`: Apache + PHP コンテナのビルド定義・設定。
+- `docker-compose.yml`: ローカル環境用。サービスは `web`（Apache + PHP）、`db`（MySQL）があります。
 - Laravel プロジェクトのファイルはプロジェクトルート直下に配置されています。
 
 ## ローカル環境のセットアップ
@@ -54,20 +54,20 @@ docker compose up -d
 #### 2. 依存パッケージのインストール
 
 ```bash
-docker compose exec php composer install -o
+docker compose exec web composer install -o
 ```
 
 #### 3. 環境設定ファイルの作成
 
 ```bash
-docker compose exec php cp .env.example .env
-docker compose exec php php artisan key:generate
+docker compose exec web cp .env.example .env
+docker compose exec web php artisan key:generate
 ```
 
 #### 4. データベースのマイグレーション
 
 ```bash
-docker compose exec php php artisan migrate
+docker compose exec web php artisan migrate
 ```
 
 ### アクセス
@@ -103,17 +103,17 @@ PHP（Laravel）はバックエンド側のビルド不要です（JIT コンパ
 ### バックエンドテスト
 
 ```bash
-docker compose exec php php artisan test
+docker compose exec web php artisan test
 ```
 
 ### フロントエンドビルド（必要に応じて）
 
 ```bash
-docker compose exec php npm run build
+docker compose exec web npm run build
 ```
 
 ### フロントエンドテスト（必要に応じて）
 
 ```bash
-docker compose exec php npm run test
+docker compose exec web npm run test
 ```
