@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 
-echo "[Docker Entrypoint] Starting PHP-FPM..."
+echo "[Docker Entrypoint] Starting Apache..."
 
-exec php-fpm
+exec apache2-foreground

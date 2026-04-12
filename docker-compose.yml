@@ -1,17 +1,5 @@
 services:
-  nginx:
-    image: nginx:latest
-    ports:
-      - "8080:80"
-    volumes:
-      - ./:/app
-      - ./.docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - php
-    networks:
-      - laravel_network
-
-  php:
+  web:
     build:
       context: .
       dockerfile: .docker/php/Dockerfile
@@ -19,9 +7,11 @@ services:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
     ports:
+      - "8080:80"
       - "5173:5173"
     volumes:
       - ./:/app
+      - ./.docker/apache/000-default.conf:/etc/apache2/sites-available/000-default.conf
       - ./.docker/php/php.ini:/usr/local/etc/php/conf.d/zz-custom.ini
     depends_on:
       - db

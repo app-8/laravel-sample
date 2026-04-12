@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM php:8.4-apache
 
 ARG UID=1000
 ARG GID=1000
@@ -29,12 +29,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
+RUN a2enmod rewrite
+
 RUN groupmod -g ${GID} --non-unique www-data \
     && usermod -u ${UID} --non-unique www-data
 
 COPY .docker/php/docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-EXPOSE 9000
+EXPOSE 80
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
