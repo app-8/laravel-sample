@@ -9,7 +9,7 @@ English version: [README.md](README.md)
 - PHP 8.4
 - Laravel 12
 - MySQL 8.4
-- Apache
+- Nginx
 - Docker / Docker Compose
 
 ## プロジェクト構成
@@ -17,27 +17,23 @@ English version: [README.md](README.md)
 ```
 .
 ├── .docker/                    # Docker関連の設定ファイル
-│   ├── apache/                 # Apache設定
-│   │   ├── 000-default.conf    # HTTP設定
-│   │   └── 000-default-ssl.conf # HTTPS設定
-│   ├── php/                    # PHP設定
-│   │   ├── Dockerfile          # PHPコンテナのビルド定義
-│   │   ├── docker-entrypoint.sh # コンテナ起動時の初期化スクリプト（SSL証明書自動生成含む）
-│   │   └── php.ini             # PHP設定
-│   └── ssl/                    # SSL証明書（自動生成・gitignore済み）
+│   ├── nginx/                  # Nginx設定
+│   │   └── default.conf        # HTTP設定
+│   └── php/                    # PHP設定
+│       ├── Dockerfile          # PHPコンテナのビルド定義
+│       ├── docker-entrypoint.sh # コンテナ起動時の初期化スクリプト
+│       └── php.ini             # PHP設定
 ├── .github/                    # GitHub Actions設定
-├── appRoot/                    # Laravelプロジェクトルート
+├── app/                        # Laravelアプリケーション（標準構成）
 ├── docker-compose.yml          # ローカル環境用Docker Compose設定
-└── Dockerfile                  # 本番環境用Dockerイメージビルド定義
+└── ...                         # その他Laravelプロジェクトファイル
 ```
 
 - `.docker/`: Docker コンテナのビルド設定をサービス別に管理します。
-    - `apache/`: Web サーバーとして Apache を使用しており、HTTP/HTTPS 両対応の設定ファイルがあります。
-    - `php/`: PHP コンテナのビルド定義・設定。`docker-entrypoint.sh` でコンテナ起動時に SSL 証明書の自動生成を行います。
-    - `ssl/`: SSL 証明書の格納ディレクトリ（`docker-entrypoint.sh` により自動生成されます）
-- `appRoot/`: アプリケーションルートです。Laravel プロジェクトの構成は標準通りです。
-- `docker-compose.yml`: ローカル環境用。サービスは `web`（Apache + PHP）と `db`（MySQL）があります。
-- `Dockerfile`: 本番環境用の Docker イメージビルド定義です。
+    - `nginx/`: Web サーバーとして Nginx を使用しており、HTTP 設定ファイルがあります。
+    - `php/`: PHP-FPM コンテナのビルド定義・設定。
+- `docker-compose.yml`: ローカル環境用。サービスは `nginx`、`php`（PHP-FPM）、`db`（MySQL）があります。
+- Laravel プロジェクトのファイルはプロジェクトルート直下に配置されています。
 
 ## ローカル環境のセットアップ
 
@@ -55,33 +51,30 @@ English version: [README.md](README.md)
 docker compose up -d
 ```
 
-起動時に `.docker/php/docker-entrypoint.sh` によって SSL 証明書が自動生成されます。
-
 #### 2. 依存パッケージのインストール
 
 ```bash
-docker compose exec web composer install -o
+docker compose exec php composer install -o
 ```
 
 #### 3. 環境設定ファイルの作成
 
 ```bash
-docker compose exec web cp .env.example .env
-docker compose exec web php artisan key:generate
+docker compose exec php cp .env.example .env
+docker compose exec php php artisan key:generate
 ```
 
 #### 4. データベースのマイグレーション
 
 ```bash
-docker compose exec web php artisan migrate
+docker compose exec php php artisan migrate
 ```
 
 ### アクセス
 
-| URL                    | 説明             |
-|------------------------|----------------|
-| http://localhost:8080  | HTTP           |
-| https://localhost:8443 | HTTPS（自己署名証明書） |
+| URL                   | 説明   |
+|-----------------------|------|
+| http://localhost:8080 | HTTP |
 
 ### DB 接続情報（ローカル）
 
@@ -110,17 +103,17 @@ PHP（Laravel）はバックエンド側のビルド不要です（JIT コンパ
 ### バックエンドテスト
 
 ```bash
-docker compose exec web php artisan test
+docker compose exec php php artisan test
 ```
 
 ### フロントエンドビルド（必要に応じて）
 
 ```bash
-docker compose exec web npm run build
+docker compose exec php npm run build
 ```
 
 ### フロントエンドテスト（必要に応じて）
 
 ```bash
-docker compose exec web npm run test
+docker compose exec php npm run test
 ```
