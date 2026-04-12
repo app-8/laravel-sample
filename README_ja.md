@@ -14,7 +14,7 @@ English version: [README.md](README.md)
 
 ## プロジェクト構成
 
-```
+```text
 .
 ├── .docker/                    # Docker関連の設定ファイル
 │   ├── nginx/                  # Nginx設定
@@ -24,16 +24,18 @@ English version: [README.md](README.md)
 │       ├── docker-entrypoint.sh # コンテナ起動時の初期化スクリプト
 │       └── php.ini             # PHP設定
 ├── .github/                    # GitHub Actions設定
-├── app/                        # Laravelアプリケーション（標準構成）
-├── docker-compose.yml          # ローカル環境用Docker Compose設定
-└── ...                         # その他Laravelプロジェクトファイル
+├── appRoot/                    # Laravelアプリケーションルート
+│   ├── app/                    # アプリケーションソース（Laravel標準構成）
+│   ├── public/                 # Webドキュメントルート
+│   └── ...                     # その他Laravelプロジェクトファイル
+└── docker-compose.yml          # ローカル環境用Docker Compose設定
 ```
 
 - `.docker/`: Docker コンテナのビルド設定をサービス別に管理します。
-    - `nginx/`: Web サーバーとして Nginx を使用しており、HTTP 設定ファイルがあります。
-    - `php/`: PHP-FPM コンテナのビルド定義・設定。
+  - `nginx/`: Web サーバーとして Nginx を使用しており、HTTP 設定ファイルがあります。
+  - `php/`: PHP-FPM コンテナのビルド定義・設定。
+- `appRoot/`: Laravelアプリケーションルート。コンテナ内では `/app` にマウントされます。
 - `docker-compose.yml`: ローカル環境用。サービスは `nginx`、`php`（PHP-FPM）、`db`（MySQL）があります。
-- Laravel プロジェクトのファイルはプロジェクトルート直下に配置されています。
 
 ## ローカル環境のセットアップ
 
@@ -72,19 +74,19 @@ docker compose exec php php artisan migrate
 
 ### アクセス
 
-| URL                   | 説明   |
-|-----------------------|------|
-| http://localhost:8080 | HTTP |
+| URL                     | 説明   |
+|-------------------------|--------|
+| `http://localhost:8080` | HTTP   |
 
 ### DB 接続情報（ローカル）
 
 | 項目       | 値                 |
-|----------|-------------------|
-| Host     | 127.0.0.1         |
-| Port     | 3306              |
-| Database | laravel_sample_db |
-| User     | username          |
-| Password | password          |
+|------------|--------------------|
+| Host       | 127.0.0.1          |
+| Port       | 3306               |
+| Database   | laravel_sample_db  |
+| User       | username           |
+| Password   | password           |
 
 ### DB コンテナのリフレッシュ
 

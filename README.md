@@ -14,7 +14,7 @@ Japanese version: [README_ja.md](README_ja.md)
 
 ## Project Structure
 
-```
+```text
 .
 ├── .docker/                    # Docker configuration files
 │   ├── nginx/                  # Nginx config
@@ -24,16 +24,18 @@ Japanese version: [README_ja.md](README_ja.md)
 │       ├── docker-entrypoint.sh # Container init script
 │       └── php.ini             # PHP settings
 ├── .github/                    # GitHub Actions workflows
-├── app/                        # Laravel application (standard structure)
-├── docker-compose.yml          # Docker Compose config for local environment
-└── ...                         # Other Laravel project files
+├── appRoot/                    # Laravel application root
+│   ├── app/                    # Application source (standard Laravel structure)
+│   ├── public/                 # Web document root
+│   └── ...                     # Other Laravel project files
+└── docker-compose.yml          # Docker Compose config for local environment
 ```
 
 - `.docker/`: Docker container build configurations organized by service.
-    - `nginx/`: Nginx configuration used as the web server (HTTP only).
-    - `php/`: PHP-FPM container build definition and settings.
+  - `nginx/`: Nginx configuration used as the web server (HTTP only).
+  - `php/`: PHP-FPM container build definition and settings.
+- `appRoot/`: Laravel application root. Mounted as `/app` inside containers.
 - `docker-compose.yml`: For local environment. Contains three services: `nginx`, `php` (PHP-FPM), and `db` (MySQL).
-- Laravel project files are placed directly at the project root.
 
 ## Local Environment Setup
 
@@ -72,9 +74,9 @@ docker compose exec php php artisan migrate
 
 ### Access
 
-| URL                   | Description |
-|-----------------------|-------------|
-| http://localhost:8080 | HTTP        |
+| URL                             | Description |
+|---------------------------------|-------------|
+| `http://localhost:8080`         | HTTP        |
 
 ### DB Connection (local)
 
