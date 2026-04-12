@@ -24,16 +24,16 @@ English version: [README.md](README.md)
 │       ├── docker-entrypoint.sh # コンテナ起動時の初期化スクリプト
 │       └── php.ini             # PHP設定
 ├── .github/                    # GitHub Actions設定
-├── app/                        # Laravelアプリケーション（標準構成）
+├── appRoot/                    # Laravelアプリケーションルート（標準のLaravel構成）
 ├── docker-compose.yml          # ローカル環境用Docker Compose設定
-└── ...                         # その他Laravelプロジェクトファイル
+└── ...                         # その他設定ファイル
 ```
 
 - `.docker/`: Docker コンテナのビルド設定をサービス別に管理します。
   - `apache/`: Web サーバーとして Apache を使用しており、HTTP 設定ファイルがあります。
   - `php/`: Apache + PHP コンテナのビルド定義・設定。
+- `appRoot/`: Laravel アプリケーションルート。コンテナ内の `/app` にマウントされます。
 - `docker-compose.yml`: ローカル環境用。サービスは `web`（Apache + PHP）、`db`（MySQL）があります。
-- Laravel プロジェクトのファイルはプロジェクトルート直下に配置されています。
 
 ## ローカル環境のセットアップ
 

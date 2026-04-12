@@ -24,16 +24,16 @@ Japanese version: [README_ja.md](README_ja.md)
 │       ├── docker-entrypoint.sh # Container init script
 │       └── php.ini             # PHP settings
 ├── .github/                    # GitHub Actions workflows
-├── app/                        # Laravel application (standard structure)
+├── appRoot/                    # Laravel application root (standard Laravel structure)
 ├── docker-compose.yml          # Docker Compose config for local environment
-└── ...                         # Other Laravel project files
+└── ...                         # Other config files
 ```
 
 - `.docker/`: Docker container build configurations organized by service.
   - `apache/`: Apache configuration used as the web server (HTTP only).
   - `php/`: Apache + PHP container build definition and settings.
+- `appRoot/`: Laravel application root. Mounted as `/app` inside the container.
 - `docker-compose.yml`: For local environment. Contains two services: `web` (Apache + PHP) and `db` (MySQL).
-- Laravel project files are placed directly at the project root.
 
 ## Local Environment Setup
 
