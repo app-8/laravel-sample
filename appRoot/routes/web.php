@@ -9,3 +9,5 @@ Route::get('/', function () {
 Route::get('/plural-sample', [\App\Http\Controllers\PluralSampleController::class, 'showForm'])->name('plural.form');
 Route::post('/plural-sample', [\App\Http\Controllers\PluralSampleController::class, 'process'])->name('plural.process');
 Route::get('/plural-sample/lang/{lang}', [\App\Http\Controllers\PluralSampleController::class, 'switchLang'])->name('plural.lang');
+
+Route::get('/debugbar-sample', [\App\Http\Controllers\DebugbarSampleController::class, 'index'])->name('debugbar.sample');
