@@ -18,13 +18,10 @@ English version: [README.md](README.md)
 .
 ├── .docker/                    # Docker関連の設定ファイル
 │   ├── apache/                 # Apache設定
-│   │   ├── 000-default.conf    # HTTP設定
-│   │   └── 000-default-ssl.conf # HTTPS設定
-│   ├── php/                    # PHP設定
-│   │   ├── Dockerfile          # PHPコンテナのビルド定義
-│   │   ├── docker-entrypoint.sh # コンテナ起動時の初期化スクリプト（SSL証明書自動生成含む）
-│   │   └── php.ini             # PHP設定
-│   └── ssl/                    # SSL証明書（自動生成・gitignore済み）
+│   │   └── 000-default.conf    # HTTP設定
+│   └── php/                    # PHP設定
+│       ├── Dockerfile          # PHPコンテナのビルド定義
+│       └── php.ini             # PHP設定
 ├── .github/                    # GitHub Actions設定
 ├── appRoot/                    # Laravelプロジェクトルート
 ├── docker-compose.yml          # ローカル環境用Docker Compose設定
@@ -32,9 +29,8 @@ English version: [README.md](README.md)
 ```
 
 - `.docker/`: Docker コンテナのビルド設定をサービス別に管理します。
-    - `apache/`: Web サーバーとして Apache を使用しており、HTTP/HTTPS 両対応の設定ファイルがあります。
-    - `php/`: PHP コンテナのビルド定義・設定。`docker-entrypoint.sh` でコンテナ起動時に SSL 証明書の自動生成を行います。
-    - `ssl/`: SSL 証明書の格納ディレクトリ（`docker-entrypoint.sh` により自動生成されます）
+    - `apache/`: Web サーバーとして Apache を使用しており、HTTP 対応の設定ファイルがあります。
+    - `php/`: PHP コンテナのビルド定義・設定。
 - `appRoot/`: アプリケーションルートです。Laravel プロジェクトの構成は標準通りです。
 - `docker-compose.yml`: ローカル環境用。サービスは `web`（Apache + PHP）と `db`（MySQL）があります。
 - `Dockerfile`: 本番環境用の Docker イメージビルド定義です。
@@ -54,8 +50,6 @@ English version: [README.md](README.md)
 ```bash
 docker compose up -d
 ```
-
-起動時に `.docker/php/docker-entrypoint.sh` によって SSL 証明書が自動生成されます。
 
 #### 2. 依存パッケージのインストール
 
@@ -78,10 +72,9 @@ docker compose exec web php artisan migrate
 
 ### アクセス
 
-| URL                    | 説明             |
-|------------------------|----------------|
-| http://localhost:8080  | HTTP           |
-| https://localhost:8443 | HTTPS（自己署名証明書） |
+| URL                   | 説明   |
+|-----------------------|------|
+| http://localhost:8080 | HTTP |
 
 ### DB 接続情報（ローカル）
 

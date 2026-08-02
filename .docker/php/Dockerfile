@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     default-mysql-client \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - \
     && apt-get install -y nodejs
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -24,7 +24,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
-RUN a2enmod rewrite ssl headers
+RUN a2enmod rewrite headers
 
 ENV APACHE_DOCUMENT_ROOT /app/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
@@ -33,10 +33,4 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 RUN chown -R www-data:www-data /app \
     && chmod -R 755 /app
 
-# エントリーポイントスクリプトをコピー
-COPY .docker/php/docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-EXPOSE 80 443
-
-ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+EXPOSE 80
